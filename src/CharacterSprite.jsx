@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 
-const FRAME_WIDTH = 16;
-const FRAME_HEIGHT = 16;
-const SCALE = 4; // Tăng gấp 4 lần cho dễ nhìn
-const FRAME_COUNT = 4; // Mỗi hàng có 4 frame
-const ANIMATION_SPEED = 200; // 200ms mỗi frame
+const FRAME_WIDTH = 16; // mỗi frame rộng 16px
+const FRAME_HEIGHT = 16; // mỗi frame cao 16px
+const FRAME_COUNT = 4; // có 4 frame trên mỗi hàng
+const SCALE = 4; // phóng to lên cho dễ nhìn
 
-const CharacterSprite = ({ animationRow = 1 }) => {
-  const [frameIndex, setFrameIndex] = useState(0);
+const CharacterSprite = () => {
+  const [frame, setFrame] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setFrameIndex((prev) => (prev + 1) % FRAME_COUNT);
-    }, ANIMATION_SPEED);
+      setFrame((prevFrame) => (prevFrame + 1) % FRAME_COUNT);
+    }, 200); // đổi frame mỗi 200ms
+
     return () => clearInterval(interval);
   }, []);
 
@@ -21,17 +21,20 @@ const CharacterSprite = ({ animationRow = 1 }) => {
       style={{
         width: FRAME_WIDTH * SCALE,
         height: FRAME_HEIGHT * SCALE,
-        backgroundImage: `url("/sprites/character.png")`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: `${FRAME_WIDTH * FRAME_COUNT * SCALE}px ${
-          FRAME_HEIGHT * 3 * SCALE
-        }px`,
-        backgroundPosition: `-${frameIndex * FRAME_WIDTH * SCALE}px -${
-          animationRow * FRAME_HEIGHT * SCALE
-        }px`,
-        imageRendering: "pixelated",
+        overflow: "hidden",
       }}
-    />
+    >
+      <img
+        src="/sprites/character.png"
+        alt="Character"
+        style={{
+          width: FRAME_WIDTH * FRAME_COUNT * SCALE,
+          height: FRAME_HEIGHT * SCALE,
+          transform: `translateX(-${frame * FRAME_WIDTH * SCALE}px)`,
+          imageRendering: "pixelated",
+        }}
+      />
+    </div>
   );
 };
 
